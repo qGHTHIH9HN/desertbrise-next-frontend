@@ -2,14 +2,18 @@ type Props = {
   eyebrow?: string;
   title: string;
   text?: string;
+  align?: "left" | "center";
 };
 
-export function SectionHeading({ eyebrow, title, text }: Props) {
+export function SectionHeading({ eyebrow, title, text, align = "left" }: Props) {
+  const isCenter = align === "center";
   return (
-    <div className="mx-auto max-w-3xl text-center">
-      {eyebrow ? <p className="text-sm font-bold uppercase tracking-[0.28em] text-amber-700">{eyebrow}</p> : null}
-      <h2 className="mt-3 text-3xl font-bold tracking-tight text-stone-950 md:text-5xl">{title}</h2>
-      {text ? <p className="mt-5 text-base leading-8 text-stone-600 md:text-lg">{text}</p> : null}
+    <div className={`${isCenter ? "mx-auto text-center" : ""} max-w-4xl`}>
+      {eyebrow ? <p className="premium-eyebrow">{eyebrow}</p> : null}
+      <h2 className="display-font mt-3 text-5xl font-semibold leading-[1] tracking-[-.04em] text-[#2b1b11] md:text-7xl">
+        {title}
+      </h2>
+      {text ? <p className={`${isCenter ? "mx-auto" : ""} mt-5 max-w-2xl text-lg leading-8 text-[#75675d]`}>{text}</p> : null}
     </div>
   );
 }
