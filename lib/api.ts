@@ -1,4 +1,4 @@
-import type { BlogCard, BlogPost, HeroSlide, ServiceCard, ServiceDetail } from "./types";
+import type { BlogCard, BlogPost, BookingPayload, HeroSlide, ServiceCard, ServiceDetail } from "./types";
 
 const API_BASE = process.env.NEXT_PUBLIC_PHP_API_BASE || "http://localhost/public/api";
 
@@ -13,7 +13,7 @@ async function getJson<T>(path: string, init?: RequestInit): Promise<T> {
   const url = `${API_BASE}${path}`;
   const res = await fetch(url, {
     ...init,
-    next: { revalidate: 300 },
+    next: init?.method && init.method !== "GET" ? undefined : { revalidate: 300 },
     headers: { Accept: "application/json", ...(init?.headers || {}) },
   });
 
@@ -44,7 +44,9 @@ export async function getServices(params: Record<string, string | number> = {}):
   pagination: ApiPagination;
 }> {
   const qs = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => qs.set(key, String(value)));
+  Object.entries(params).forEach(([key, value]) => {
+    if (String(value).trim() !== "") qs.set(key, String(value));
+  });
   return getJson(`/services.php${qs.size ? `?${qs.toString()}` : ""}`);
 }
 
@@ -58,10 +60,20 @@ export async function getBlog(params: Record<string, string | number> = {}): Pro
   pagination: ApiPagination;
 }> {
   const qs = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => qs.set(key, String(value)));
+  Object.entries(params).forEach(([key, value]) => {
+    if (String(value).trim() !== "") qs.set(key, String(value));
+  });
   return getJson(`/blog.php${qs.size ? `?${qs.toString()}` : ""}`);
 }
 
 export async function getPost(slug: string): Promise<{ ok: boolean; post: BlogPost }> {
   return getJson(`/post.php?slug=${encodeURIComponent(slug)}`);
+}
+
+export async function sendBooking(payload: BookingPayload): Promise<{ ok: boolean; message?: string; error?: string }> {
+  return getJson("/booking.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 }

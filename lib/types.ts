@@ -19,6 +19,8 @@ export type ServiceCard = {
   location: string;
   duration: string;
   price: number;
+  original_price?: number;
+  discount_percent?: number;
   group_type: string;
   journey_style: string;
   best_for: string;
@@ -27,21 +29,50 @@ export type ServiceCard = {
   meta_description?: string;
 };
 
+export type ServiceImage = { id: number; image: string; alt: string; sort_order?: number };
+export type ItineraryDay = {
+  id?: number;
+  day_number: number;
+  title: string;
+  details: string;
+  location: string;
+  meals: string;
+  included?: string;
+  accommodation: string;
+  image?: string;
+};
+export type ServiceFaq = { question: string; answer: string };
+export type ServiceInclude = { id?: number; title: string; details: string; type?: string; is_active?: number };
+export type ServiceReview = { name: string; rating: number; title?: string; content: string; operator_reply?: string; created_at: string };
+export type ServiceDeparture = { id: number; start_date: string; end_date: string; status: string; price: number; available_seats: number };
+
 export type ServiceDetail = ServiceCard & {
   content: string;
   hero_intro: string;
   availability_text: string;
+  availability_type?: string;
+  duration_days?: number;
+  max_future_days?: number;
+  child_rate?: number;
+  wetravel_uuid?: string;
   stay_info: string;
   transport_info: string;
   departure_type: string;
   highlight_1: string;
   highlight_2: string;
   highlight_3: string;
-  images: Array<{ id: number; image: string; alt: string }>;
-  itinerary: Array<{ day_number: number; title: string; details: string; location: string; meals: string; accommodation: string }>;
-  faqs: Array<{ question: string; answer: string }>;
-  includes: Array<{ label: string; type: string }>;
-  reviews: Array<{ name: string; rating: number; content: string; created_at: string }>;
+  highlights?: string[];
+  guidance_type?: string;
+  adventure_type?: string;
+  budget_class?: string;
+  images: ServiceImage[];
+  itinerary: ItineraryDay[];
+  faqs: ServiceFaq[];
+  includes: ServiceInclude[];
+  reviews: ServiceReview[];
+  review_summary?: { total: number; average: number };
+  departures?: ServiceDeparture[];
+  related_services?: ServiceCard[];
 };
 
 export type BlogCard = {
@@ -57,6 +88,8 @@ export type BlogCard = {
   meta_description?: string;
 };
 
+export type BlogFaq = { question: string; answer: string };
+
 export type BlogPost = BlogCard & {
   content: string;
   quick_answer: string;
@@ -65,4 +98,23 @@ export type BlogPost = BlogCard & {
   author_role: string;
   reviewed_by: string;
   updated_label: string;
+  tags?: string;
+  faqs?: BlogFaq[];
+  featured_tours?: ServiceCard[];
+  related_posts?: BlogCard[];
+};
+
+export type BookingPayload = {
+  service_id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  adults: number;
+  children: number;
+  total_price?: number;
+  preferred_date?: string;
+  pickup_place?: string;
+  travel_style?: string;
+  message: string;
+  departure_id?: number | string;
 };

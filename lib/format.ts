@@ -4,5 +4,17 @@ export function money(value: number): string {
 }
 
 export function plainText(html: string): string {
-  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return (html || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+export function dateLabel(value?: string): string {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(date);
+}
+
+export function stars(rating: number): string {
+  const filled = Math.max(0, Math.min(5, Math.round(rating || 0)));
+  return "★".repeat(filled) + "☆".repeat(5 - filled);
 }

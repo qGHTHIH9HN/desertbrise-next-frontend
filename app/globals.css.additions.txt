@@ -1,0 +1,16 @@
+/* Add these lines at the bottom of app/globals.css */
+.booking-input {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.09);
+  padding: .95rem 1rem;
+  color: white;
+  outline: none;
+}
+.booking-input::placeholder { color: rgba(255,255,255,.52); }
+.booking-input:focus { border-color: rgba(239,189,115,.55); background: rgba(255,255,255,.12); }
+.booking-input option { color: #2b1b11; }
+.prose-travel img { border-radius: 1.25rem; margin: 1.5rem 0; box-shadow: 0 18px 45px rgba(58,37,22,.12); }
+.prose-travel table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; overflow: hidden; border-radius: 1rem; }
+.prose-travel td, .prose-travel th { border: 1px solid #eadbc8; padding: .9rem; }
