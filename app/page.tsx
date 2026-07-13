@@ -17,7 +17,7 @@ function pickImage(services: ServiceCard[] = [], words: string[] = []) {
 
 function Icon({ name }: { name: "people" | "star" | "shield" | "calendar" | "heart" | "leaf" | "comfort" | "support" | "compass" | "secure" | "map" | "spark" }) {
   const common = "h-6 w-6";
-  const icons: Record<string, JSX.Element> = {
+  const icons: Record<string, ReactElement> = {
     people: <path d="M7 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2.8 20a5.2 5.2 0 0 1 10.4 0M10.8 20a5.2 5.2 0 0 1 10.4 0" />,
     star: <path d="m12 3 2.65 5.37 5.93.86-4.29 4.18 1.01 5.9L12 16.52l-5.3 2.79 1.01-5.9-4.29-4.18 5.93-.86L12 3Z" />,
     shield: <path d="M12 3 20 6v6c0 5-3.4 8.5-8 9-4.6-.5-8-4-8-9V6l8-3Z" />,
