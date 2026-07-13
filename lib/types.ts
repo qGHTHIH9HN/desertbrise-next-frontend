@@ -73,6 +73,7 @@ export type ServiceDetail = ServiceCard & {
   review_summary?: { total: number; average: number };
   departures?: ServiceDeparture[];
   related_services?: ServiceCard[];
+  related_posts?: BlogCard[];
 };
 
 export type BlogCard = {

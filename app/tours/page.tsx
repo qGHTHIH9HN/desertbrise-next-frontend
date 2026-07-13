@@ -1,5 +1,7 @@
+import { BlogCard } from "@/components/BlogCard";
+import { CTA } from "@/components/CTA";
 import { TourCard } from "@/components/TourCard";
-import { getServices } from "@/lib/api";
+import { getBlog, getServices } from "@/lib/api";
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
@@ -28,7 +30,10 @@ export default async function ToursPage({ searchParams }: Props) {
     budget_class: value(sp, "budget_class"),
     per_page: 24,
   };
-  const { items, pagination } = await getServices(query);
+  const [{ items, pagination }, blogData] = await Promise.all([
+    getServices(query),
+    getBlog({ per_page: 3 }).catch(() => null),
+  ]);
 
   return (
     <>
@@ -86,6 +91,23 @@ export default async function ToursPage({ searchParams }: Props) {
           </main>
         </div>
       </section>
+      {blogData?.items?.length ? (
+        <section className="bg-[#f9f2e7] px-5 py-20 sm:px-8 lg:px-10">
+          <div className="mx-auto max-w-7xl">
+            <p className="premium-eyebrow">Travel journal</p>
+            <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <h2 className="display-font max-w-3xl text-5xl font-semibold tracking-[-.04em] text-[#2b1b11]">Useful guides to help travelers choose better.</h2>
+              <a href="/blog" className="text-sm font-extrabold text-[#8b541f]">Read all articles →</a>
+            </div>
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {blogData.items.slice(0, 3).map((post) => <BlogCard key={post.id} post={post} />)}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <CTA eyebrow="Want help choosing?" title="Tell us your dates, comfort level, and dream route." text="We will recommend the Morocco journey that fits your timing, energy, and budget." />
+
     </>
   );
 }

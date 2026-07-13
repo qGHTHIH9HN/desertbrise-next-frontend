@@ -3,11 +3,10 @@ import { notFound } from "next/navigation";
 import { BlogCard } from "@/components/BlogCard";
 import { TourCard } from "@/components/TourCard";
 import { CTA } from "@/components/CTA";
-import { getPost } from "@/lib/api";
+import { getBlog, getPost, getServices } from "@/lib/api";
 import { dateLabel, plainText } from "@/lib/format";
 
 type Props = { params: Promise<{ slug: string }> };
-
 type TocItem = { id: string; text: string };
 
 function addHeadingIds(html: string): { html: string; toc: TocItem[] } {
@@ -42,6 +41,14 @@ export default async function BlogDetailPage({ params }: Props) {
 
   const post = data.post;
   const { html, toc } = addHeadingIds(post.content || "");
+
+  const [fallbackTours, fallbackPosts] = await Promise.all([
+    getServices({ per_page: 6 }).catch(() => null),
+    getBlog({ per_page: 6 }).catch(() => null),
+  ]);
+
+  const featuredTours = (post.featured_tours?.length ? post.featured_tours : fallbackTours?.items || []).slice(0, 3);
+  const relatedPosts = (post.related_posts?.length ? post.related_posts : (fallbackPosts?.items || []).filter((item) => item.id !== post.id)).slice(0, 3);
 
   return (
     <>
@@ -102,7 +109,7 @@ export default async function BlogDetailPage({ params }: Props) {
                 <p className="premium-eyebrow">FAQ</p>
                 <h2 className="display-font mt-3 text-5xl font-semibold leading-[1] tracking-[-.04em] text-[#2b1b11] md:text-6xl">Questions from travelers.</h2>
                 <div className="mt-8 grid gap-4">
-                  {post.faqs.map((faq) => (
+                  {post.faqs.filter((faq) => faq.question && faq.answer).map((faq) => (
                     <details key={faq.question} className="premium-card rounded-[1.4rem] p-6 open:bg-white">
                       <summary className="cursor-pointer text-base font-extrabold text-[#2b1b11]">{faq.question}</summary>
                       <p className="mt-4 text-sm leading-7 text-[#75675d]">{faq.answer}</p>
@@ -127,11 +134,11 @@ export default async function BlogDetailPage({ params }: Props) {
               </div>
             ) : null}
 
-            {post.featured_tours?.length ? (
+            {featuredTours.length ? (
               <div className="premium-card rounded-[1.6rem] p-6">
                 <p className="premium-eyebrow">Featured tours</p>
                 <div className="mt-5 grid gap-4">
-                  {post.featured_tours.slice(0, 3).map((tour) => (
+                  {featuredTours.map((tour) => (
                     <Link key={tour.id} href={tour.url} className="group grid grid-cols-[92px_1fr] gap-3 rounded-2xl bg-[#fffaf2] p-3">
                       <div className="h-20 overflow-hidden rounded-xl bg-[#dac9b7]">{tour.image ? <img src={tour.image} alt={tour.title} className="h-full w-full object-cover" /> : null}</div>
                       <div>
@@ -143,29 +150,43 @@ export default async function BlogDetailPage({ params }: Props) {
                 </div>
               </div>
             ) : null}
+
+            {relatedPosts.length ? (
+              <div className="premium-card rounded-[1.6rem] p-6">
+                <p className="premium-eyebrow">Related articles</p>
+                <div className="mt-5 grid gap-4">
+                  {relatedPosts.map((related) => (
+                    <Link key={related.id} href={related.url} className="block rounded-2xl bg-[#fffaf2] p-4">
+                      <h3 className="clamp-2 text-sm font-extrabold leading-5 text-[#2b1b11] hover:text-[#8b541f]">{related.title}</h3>
+                      <p className="mt-2 clamp-2 text-xs leading-5 text-[#75675d]">{related.excerpt}</p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </aside>
         </div>
       </section>
 
-      {post.featured_tours?.length ? (
+      {featuredTours.length ? (
         <section className="bg-[#f9f2e7] px-5 py-20 sm:px-8 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <p className="premium-eyebrow">Tours mentioned in this guide</p>
             <h2 className="display-font mt-3 text-5xl font-semibold tracking-[-.04em] text-[#2b1b11]">Related journeys.</h2>
             <div className="mt-10 grid gap-6 md:grid-cols-3">
-              {post.featured_tours.slice(0, 3).map((tour) => <TourCard key={tour.id} tour={tour} />)}
+              {featuredTours.map((tour) => <TourCard key={tour.id} tour={tour} />)}
             </div>
           </div>
         </section>
       ) : null}
 
-      {post.related_posts?.length ? (
+      {relatedPosts.length ? (
         <section className="bg-[#fffaf2] px-5 py-20 sm:px-8 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <p className="premium-eyebrow">Continue reading</p>
             <h2 className="display-font mt-3 text-5xl font-semibold tracking-[-.04em] text-[#2b1b11]">Related articles.</h2>
             <div className="mt-10 grid gap-6 md:grid-cols-3">
-              {post.related_posts.slice(0, 3).map((related) => <BlogCard key={related.id} post={related} />)}
+              {relatedPosts.map((related) => <BlogCard key={related.id} post={related} />)}
             </div>
           </div>
         </section>
