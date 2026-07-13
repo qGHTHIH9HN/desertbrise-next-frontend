@@ -105,6 +105,58 @@ export type BlogPost = BlogCard & {
   related_posts?: BlogCard[];
 };
 
+export type CmsPageCard = {
+  id: number;
+  title: string;
+  slug: string;
+  url: string;
+  page_type: "hub" | "style" | "default" | string;
+  excerpt: string;
+  hero_subtitle: string;
+  image: string;
+  secondary_image?: string;
+  meta_title?: string;
+  meta_description?: string;
+  updated_at?: string;
+};
+
+export type CmsPageFaq = { question: string; answer: string };
+export type CmsPageLandmark = { title: string; description: string; image?: string; sort_order?: number };
+export type CmsPageExperience = { title: string; description: string; icon?: string; image?: string; sort_order?: number };
+export type CmsPageStyleSection = { section_key: string; title?: string; subtitle?: string; body?: string; sort_order?: number };
+export type CmsPageStyleItem = { title: string; description: string; icon?: string; image?: string; sort_order?: number };
+
+export type CmsPage = CmsPageCard & {
+  hero_image: string;
+  intro_image: string;
+  surprise_image?: string;
+  why_visit_title?: string;
+  why_visit_text?: string;
+  landmarks_title?: string;
+  experiences_title?: string;
+  tours_title?: string;
+  guides_title?: string;
+  faq_title?: string;
+  landmarks_text?: string;
+  experiences_text?: string;
+  itinerary_text?: string;
+  audience_text?: string;
+  surprise_title?: string;
+  surprise_text?: string;
+  cta_title?: string;
+  cta_text?: string;
+  cta_button_text?: string;
+  cta_button_url?: string;
+  content?: string;
+  landmarks?: CmsPageLandmark[];
+  experiences?: CmsPageExperience[];
+  faqs?: CmsPageFaq[];
+  services?: ServiceCard[];
+  posts?: BlogCard[];
+  style_sections?: Record<string, CmsPageStyleSection>;
+  style_items?: Record<string, CmsPageStyleItem[]>;
+};
+
 export type BookingPayload = {
   service_id: number;
   name: string;

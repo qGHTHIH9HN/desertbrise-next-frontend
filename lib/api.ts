@@ -1,4 +1,4 @@
-import type { BlogCard, BlogPost, BookingPayload, HeroSlide, ServiceCard, ServiceDetail } from "./types";
+import type { BlogCard, BlogPost, BookingPayload, CmsPage, CmsPageCard, HeroSlide, ServiceCard, ServiceDetail } from "./types";
 
 const API_BASE = process.env.NEXT_PUBLIC_PHP_API_BASE || "http://localhost/public/api";
 
@@ -9,11 +9,11 @@ type ApiPagination = {
   total_pages: number;
 };
 
-async function getJson<T>(path: string, init?: RequestInit): Promise<T> {
+async function getJson<T>(path: string, init?: RequestInit, revalidate = 300): Promise<T> {
   const url = `${API_BASE}${path}`;
   const res = await fetch(url, {
     ...init,
-    next: init?.method && init.method !== "GET" ? undefined : { revalidate: 300 },
+    next: init?.method && init.method !== "GET" ? undefined : { revalidate },
     headers: { Accept: "application/json", ...(init?.headers || {}) },
   });
 
@@ -68,6 +68,22 @@ export async function getBlog(params: Record<string, string | number> = {}): Pro
 
 export async function getPost(slug: string): Promise<{ ok: boolean; post: BlogPost }> {
   return getJson(`/post.php?slug=${encodeURIComponent(slug)}`);
+}
+
+export async function getPages(params: Record<string, string | number> = {}): Promise<{
+  ok: boolean;
+  items: CmsPageCard[];
+  total: number;
+}> {
+  const qs = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (String(value).trim() !== "") qs.set(key, String(value));
+  });
+  return getJson(`/pages.php${qs.size ? `?${qs.toString()}` : ""}`, undefined, 60);
+}
+
+export async function getCmsPage(slug: string): Promise<{ ok: boolean; page: CmsPage }> {
+  return getJson(`/page.php?slug=${encodeURIComponent(slug)}`, undefined, 60);
 }
 
 export async function sendBooking(payload: BookingPayload): Promise<{ ok: boolean; message?: string; error?: string }> {
