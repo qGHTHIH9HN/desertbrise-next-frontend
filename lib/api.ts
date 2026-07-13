@@ -1,6 +1,16 @@
-import type { BlogCard, BlogPost, BookingPayload, CmsPage, CmsPageCard, HeroSlide, ServiceCard, ServiceDetail } from "./types";
+import type {
+  BlogCard,
+  BlogPost,
+  BookingPayload,
+  CmsPage,
+  CmsPageCard,
+  HeroSlide,
+  ServiceCard,
+  ServiceDetail,
+} from "./types";
 
-const API_BASE = process.env.NEXT_PUBLIC_PHP_API_BASE || "http://localhost/public/api";
+const API_BASE =
+  process.env.NEXT_PUBLIC_PHP_API_BASE || "http://localhost/public/api";
 
 type ApiPagination = {
   page: number;
@@ -9,12 +19,20 @@ type ApiPagination = {
   total_pages: number;
 };
 
-async function getJson<T>(path: string, init?: RequestInit, revalidate = 300): Promise<T> {
+async function getJson<T>(
+  path: string,
+  init?: RequestInit,
+  revalidate = 300
+): Promise<T> {
   const url = `${API_BASE}${path}`;
+
   const res = await fetch(url, {
     ...init,
     next: init?.method && init.method !== "GET" ? undefined : { revalidate },
-    headers: { Accept: "application/json", ...(init?.headers || {}) },
+    headers: {
+      Accept: "application/json",
+      ...(init?.headers || {}),
+    },
   });
 
   if (!res.ok) {
@@ -38,58 +56,86 @@ export async function getHome(): Promise<{
   return getJson("/home.php");
 }
 
-export async function getServices(params: Record<string, string | number> = {}): Promise<{
+export async function getServices(
+  params: Record<string, string | number> = {}
+): Promise<{
   ok: boolean;
   items: ServiceCard[];
   pagination: ApiPagination;
 }> {
   const qs = new URLSearchParams();
+
   Object.entries(params).forEach(([key, value]) => {
-    if (String(value).trim() !== "") qs.set(key, String(value));
+    if (String(value).trim() !== "") {
+      qs.set(key, String(value));
+    }
   });
+
   return getJson(`/services.php${qs.size ? `?${qs.toString()}` : ""}`);
 }
 
-export async function getService(slug: string): Promise<{ ok: boolean; service: ServiceDetail }> {
+export async function getService(
+  slug: string
+): Promise<{ ok: boolean; service: ServiceDetail }> {
   return getJson(`/service.php?slug=${encodeURIComponent(slug)}`);
 }
 
-export async function getBlog(params: Record<string, string | number> = {}): Promise<{
+export async function getBlog(
+  params: Record<string, string | number> = {}
+): Promise<{
   ok: boolean;
   items: BlogCard[];
   pagination: ApiPagination;
 }> {
   const qs = new URLSearchParams();
+
   Object.entries(params).forEach(([key, value]) => {
-    if (String(value).trim() !== "") qs.set(key, String(value));
+    if (String(value).trim() !== "") {
+      qs.set(key, String(value));
+    }
   });
+
   return getJson(`/blog.php${qs.size ? `?${qs.toString()}` : ""}`);
 }
 
-export async function getPost(slug: string): Promise<{ ok: boolean; post: BlogPost }> {
+export async function getPost(
+  slug: string
+): Promise<{ ok: boolean; post: BlogPost }> {
   return getJson(`/post.php?slug=${encodeURIComponent(slug)}`);
 }
 
-export async function getPages(params: Record<string, string | number> = {}): Promise<{
+export async function getPages(
+  params: Record<string, string | number> = {}
+): Promise<{
   ok: boolean;
   items: CmsPageCard[];
   total: number;
 }> {
   const qs = new URLSearchParams();
+
   Object.entries(params).forEach(([key, value]) => {
-    if (String(value).trim() !== "") qs.set(key, String(value));
+    if (String(value).trim() !== "") {
+      qs.set(key, String(value));
+    }
   });
+
   return getJson(`/pages.php${qs.size ? `?${qs.toString()}` : ""}`, undefined, 60);
 }
 
-export async function getCmsPage(slug: string): Promise<{ ok: boolean; page: CmsPage }> {
+export async function getCmsPage(
+  slug: string
+): Promise<{ ok: boolean; page: CmsPage }> {
   return getJson(`/page.php?slug=${encodeURIComponent(slug)}`, undefined, 60);
 }
 
-export async function sendBooking(payload: BookingPayload): Promise<{ ok: boolean; message?: string; error?: string }> {
+export async function sendBooking(
+  payload: BookingPayload
+): Promise<{ ok: boolean; message?: string; error?: string }> {
   return getJson("/booking.php", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(payload),
   });
 }
