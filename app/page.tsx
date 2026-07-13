@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactElement } from "react";
 import { BlogCard } from "@/components/BlogCard";
 import { CTA } from "@/components/CTA";
 import { TourCard } from "@/components/TourCard";
