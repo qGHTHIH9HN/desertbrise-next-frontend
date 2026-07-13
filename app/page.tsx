@@ -5,6 +5,7 @@ import { CTA } from "@/components/CTA";
 import { TourCard } from "@/components/TourCard";
 import { getHome } from "@/lib/api";
 import type { ServiceCard } from "@/lib/types";
+import { destinations, travelStyles } from "@/lib/travel-content";
 import { money } from "@/lib/format";
 
 function pickImage(services: ServiceCard[] = [], words: string[] = []) {
@@ -131,6 +132,70 @@ export default async function HomePage() {
 
           <div className="grid gap-7 md:grid-cols-2 xl:grid-cols-4">
             {featured.map((tour) => <TourCard key={tour.id} tour={tour} />)}
+          </div>
+        </div>
+      </section>
+
+
+      <section className="bg-[#fffaf2] px-5 py-24 sm:px-8 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-11 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              <p className="premium-eyebrow">Morocco destinations</p>
+              <h2 className="display-font mt-3 max-w-3xl text-5xl font-semibold leading-[.98] tracking-[-.04em] text-[#2b1b11] md:text-7xl">
+                Choose the Feeling of Your Route
+              </h2>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-[#75675d]">
+                Desert, mountains, coast, imperial cities, blue streets — each destination carries a different emotion. Start from the place that calls you.
+              </p>
+            </div>
+            <Link href="/destinations" className="hidden items-center gap-3 rounded-full border border-[#dec9ae] bg-white px-6 py-3 text-sm font-bold text-[#7a4a1f] transition hover:border-[#c98f40] hover:bg-[#fffaf2] md:inline-flex">
+              Explore destinations <span>→</span>
+            </Link>
+          </div>
+          <div className="grid gap-5 md:grid-cols-3">
+            {destinations.slice(0, 6).map((destination, index) => (
+              <Link key={destination.slug} href={`/destinations/${destination.slug}`} className={`${index === 0 ? "md:col-span-2" : ""} group relative min-h-[320px] overflow-hidden rounded-[2rem] border border-[#eadbc8] bg-[#2b1b11] shadow-[0_20px_60px_rgba(58,37,22,.12)]`}>
+                <img src={destination.image} alt={destination.name} className="absolute inset-0 h-full w-full object-cover opacity-82 transition duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1d130c]/88 via-[#1d130c]/30 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-7 text-white">
+                  <p className="text-xs font-black uppercase tracking-[.28em] text-[#f2c373]">{destination.eyebrow}</p>
+                  <h3 className="display-font mt-3 text-4xl font-semibold leading-none tracking-[-.04em]">{destination.name}</h3>
+                  <p className="mt-3 max-w-xl text-sm leading-6 text-white/80">{destination.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f9f2e7] px-5 py-24 sm:px-8 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-11 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              <p className="premium-eyebrow">Travel styles</p>
+              <h2 className="display-font mt-3 max-w-3xl text-5xl font-semibold leading-[.98] tracking-[-.04em] text-[#2b1b11] md:text-7xl">
+                Travel by Emotion, Not Only by Map
+              </h2>
+            </div>
+            <p className="max-w-xl text-lg leading-8 text-[#75675d]">
+              Some travelers want silence, others food, comfort, trekking or family ease. These styles help visitors feel understood immediately.
+            </p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {travelStyles.map((style) => (
+              <Link key={style.slug} href={`/travel-styles/${style.slug}`} className="group overflow-hidden rounded-[2rem] border border-[#eadbc8] bg-white shadow-[0_18px_54px_rgba(58,37,22,.08)] transition hover:-translate-y-1 hover:shadow-[0_28px_80px_rgba(58,37,22,.14)]">
+                <div className="h-56 overflow-hidden bg-[#dac9b7]">
+                  <img src={style.image} alt={style.name} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                </div>
+                <div className="p-7">
+                  <p className="premium-eyebrow">{style.eyebrow}</p>
+                  <h3 className="display-font mt-3 text-4xl font-semibold leading-none tracking-[-.04em] text-[#2b1b11]">{style.name}</h3>
+                  <p className="mt-4 clamp-3 text-sm leading-7 text-[#75675d]">{style.description}</p>
+                  <span className="mt-5 inline-flex text-sm font-extrabold text-[#8b541f]">Explore style →</span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

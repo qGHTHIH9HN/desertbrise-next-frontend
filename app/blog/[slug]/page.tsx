@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BlogCard } from "@/components/BlogCard";
-import { TourCard } from "@/components/TourCard";
 import { CTA } from "@/components/CTA";
 import { getBlog, getPost, getServices } from "@/lib/api";
 import { dateLabel, plainText } from "@/lib/format";
+import type { BlogCard, ServiceCard } from "@/lib/types";
 
 type Props = { params: Promise<{ slug: string }> };
 type TocItem = { id: string; text: string };
@@ -18,6 +17,34 @@ function addHeadingIds(html: string): { html: string; toc: TocItem[] } {
     return `<h2${attrs} id="${id}">${inner}</h2>`;
   });
   return { html: updated, toc };
+}
+
+function TourMini({ tour }: { tour: ServiceCard }) {
+  return (
+    <Link href={tour.url || `/tour/${tour.slug}`} className="group grid grid-cols-[92px_1fr] gap-3 rounded-2xl bg-[#fffaf2] p-3 transition hover:bg-white">
+      <div className="h-20 overflow-hidden rounded-xl bg-[#dac9b7]">
+        {tour.image ? <img src={tour.image} alt={tour.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /> : <div className="grid h-full w-full place-items-center bg-[#eadbc8] text-[10px] font-black uppercase tracking-[.18em] text-[#8b6b52]">DB</div>}
+      </div>
+      <div>
+        <h3 className="clamp-2 text-sm font-extrabold leading-5 text-[#2b1b11] group-hover:text-[#8b541f]">{tour.title}</h3>
+        <p className="mt-1 text-xs font-semibold text-[#75675d]">{tour.duration || tour.location || "Private journey"}</p>
+      </div>
+    </Link>
+  );
+}
+
+function ArticleMini({ post }: { post: BlogCard }) {
+  return (
+    <Link href={post.url || `/blog/${post.slug}`} className="group grid grid-cols-[92px_1fr] gap-3 rounded-2xl bg-[#fffaf2] p-3 transition hover:bg-white">
+      <div className="h-20 overflow-hidden rounded-xl bg-[#dac9b7]">
+        {post.image ? <img src={post.image} alt={post.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /> : <div className="grid h-full w-full place-items-center bg-gradient-to-br from-[#eadbc8] to-[#fffaf2] text-center text-[10px] font-black uppercase tracking-[.18em] text-[#8b6b52]">Guide</div>}
+      </div>
+      <div>
+        <h3 className="clamp-2 text-sm font-extrabold leading-5 text-[#2b1b11] group-hover:text-[#8b541f]">{post.title}</h3>
+        <p className="mt-1 clamp-2 text-xs leading-5 text-[#75675d]">{post.excerpt}</p>
+      </div>
+    </Link>
+  );
 }
 
 export async function generateMetadata({ params }: Props) {
@@ -67,11 +94,7 @@ export default async function BlogDetailPage({ params }: Props) {
               {post.reviewed_by ? <span>Reviewed by <strong className="text-[#2b1b11]">{post.reviewed_by}</strong></span> : null}
               {post.updated_label ? <span>{post.updated_label}</span> : null}
             </div>
-            {post.image ? (
-              <div className="mt-9 h-[28rem] overflow-hidden rounded-[2rem] bg-[#dac9b7]">
-                <img src={post.image} alt={post.title} className="h-full w-full object-cover" />
-              </div>
-            ) : null}
+            {post.image ? <div className="mt-9 h-[28rem] overflow-hidden rounded-[2rem] bg-[#dac9b7]"><img src={post.image} alt={post.title} className="h-full w-full object-cover" /></div> : null}
           </div>
         </article>
       </section>
@@ -79,118 +102,41 @@ export default async function BlogDetailPage({ params }: Props) {
       <section className="bg-[#fffaf2] px-5 pb-24 sm:px-8 lg:px-10">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_340px]">
           <main>
-            {post.quick_answer ? (
-              <div className="premium-card rounded-[2rem] p-7 md:p-9">
-                <p className="premium-eyebrow">Quick answer</p>
-                <p className="mt-4 text-lg leading-8 text-[#4f463f]">{post.quick_answer}</p>
-              </div>
-            ) : null}
+            {post.quick_answer ? <div className="premium-card rounded-[2rem] p-7 md:p-9"><p className="premium-eyebrow">Quick answer</p><p className="mt-4 text-lg leading-8 text-[#4f463f]">{post.quick_answer}</p></div> : null}
 
             {post.takeaways?.length ? (
               <div className="premium-card mt-6 rounded-[2rem] p-7 md:p-9">
                 <p className="premium-eyebrow">Key takeaways</p>
                 <div className="mt-5 grid gap-3">
-                  {post.takeaways.map((takeaway, index) => (
-                    <div key={`${takeaway}-${index}`} className="flex gap-3 rounded-2xl bg-[#fffaf2] p-4 text-sm font-bold leading-6 text-[#2b1b11]">
-                      <span className="text-[#d79a44]">0{index + 1}</span>
-                      <span>{takeaway}</span>
-                    </div>
-                  ))}
+                  {post.takeaways.map((takeaway, index) => <div key={`${takeaway}-${index}`} className="flex gap-3 rounded-2xl bg-[#fffaf2] p-4 text-sm font-bold leading-6 text-[#2b1b11]"><span className="text-[#d79a44]">0{index + 1}</span><span>{takeaway}</span></div>)}
                 </div>
               </div>
             ) : null}
 
-            <article className="premium-card mt-6 rounded-[2rem] p-7 md:p-11">
-              <div className="prose-travel max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
-            </article>
+            <article className="premium-card mt-6 rounded-[2rem] p-7 md:p-11"><div className="prose-travel max-w-none" dangerouslySetInnerHTML={{ __html: html }} /></article>
 
             {post.faqs?.length ? (
               <section className="mt-12">
                 <p className="premium-eyebrow">FAQ</p>
                 <h2 className="display-font mt-3 text-5xl font-semibold leading-[1] tracking-[-.04em] text-[#2b1b11] md:text-6xl">Questions from travelers.</h2>
                 <div className="mt-8 grid gap-4">
-                  {post.faqs.filter((faq) => faq.question && faq.answer).map((faq) => (
-                    <details key={faq.question} className="premium-card rounded-[1.4rem] p-6 open:bg-white">
-                      <summary className="cursor-pointer text-base font-extrabold text-[#2b1b11]">{faq.question}</summary>
-                      <p className="mt-4 text-sm leading-7 text-[#75675d]">{faq.answer}</p>
-                    </details>
-                  ))}
+                  {post.faqs.filter((faq) => faq.question && faq.answer).map((faq) => <details key={faq.question} className="premium-card rounded-[1.4rem] p-6 open:bg-white"><summary className="cursor-pointer text-base font-extrabold text-[#2b1b11]">{faq.question}</summary><p className="mt-4 text-sm leading-7 text-[#75675d]">{faq.answer}</p></details>)}
                 </div>
               </section>
             ) : null}
           </main>
 
           <aside className="h-fit space-y-5 lg:sticky lg:top-24">
-            {toc.length ? (
-              <div className="premium-card rounded-[1.6rem] p-6">
-                <p className="premium-eyebrow">On this page</p>
-                <ol className="mt-4 grid gap-3 text-sm font-bold leading-6 text-[#75675d]">
-                  {toc.map((item, index) => (
-                    <li key={item.id}>
-                      <a href={`#${item.id}`} className="hover:text-[#8b541f]">{index + 1}. {item.text}</a>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            ) : null}
+            {toc.length ? <div className="premium-card rounded-[1.6rem] p-6"><p className="premium-eyebrow">On this page</p><ol className="mt-4 grid gap-3 text-sm font-bold leading-6 text-[#75675d]">{toc.map((item, index) => <li key={item.id}><a href={`#${item.id}`} className="hover:text-[#8b541f]">{index + 1}. {item.text}</a></li>)}</ol></div> : null}
 
-            {featuredTours.length ? (
-              <div className="premium-card rounded-[1.6rem] p-6">
-                <p className="premium-eyebrow">Featured tours</p>
-                <div className="mt-5 grid gap-4">
-                  {featuredTours.map((tour) => (
-                    <Link key={tour.id} href={tour.url} className="group grid grid-cols-[92px_1fr] gap-3 rounded-2xl bg-[#fffaf2] p-3">
-                      <div className="h-20 overflow-hidden rounded-xl bg-[#dac9b7]">{tour.image ? <img src={tour.image} alt={tour.title} className="h-full w-full object-cover" /> : null}</div>
-                      <div>
-                        <h3 className="clamp-2 text-sm font-extrabold leading-5 text-[#2b1b11] group-hover:text-[#8b541f]">{tour.title}</h3>
-                        <p className="mt-1 text-xs text-[#75675d]">{tour.duration || tour.location}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ) : null}
+            {featuredTours.length ? <div className="premium-card rounded-[1.6rem] p-6"><p className="premium-eyebrow">Featured tours</p><div className="mt-5 grid gap-4">{featuredTours.map((tour) => <TourMini key={tour.id} tour={tour} />)}</div></div> : null}
 
-            {relatedPosts.length ? (
-              <div className="premium-card rounded-[1.6rem] p-6">
-                <p className="premium-eyebrow">Related articles</p>
-                <div className="mt-5 grid gap-4">
-                  {relatedPosts.map((related) => (
-                    <Link key={related.id} href={related.url} className="block rounded-2xl bg-[#fffaf2] p-4">
-                      <h3 className="clamp-2 text-sm font-extrabold leading-5 text-[#2b1b11] hover:text-[#8b541f]">{related.title}</h3>
-                      <p className="mt-2 clamp-2 text-xs leading-5 text-[#75675d]">{related.excerpt}</p>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ) : null}
+            {relatedPosts.length ? <div className="premium-card rounded-[1.6rem] p-6"><p className="premium-eyebrow">Related articles</p><div className="mt-5 grid gap-4">{relatedPosts.map((related) => <ArticleMini key={related.id} post={related} />)}</div></div> : null}
+
+            <div className="rounded-[1.6rem] bg-[#2b1b11] p-6 text-white shadow-[0_18px_54px_rgba(58,37,22,.18)]"><p className="premium-eyebrow text-[#efbd73]">Plan your trip</p><p className="mt-4 text-sm leading-7 text-white/76">Want a custom Morocco itinerary? Tell us your dates, style, and interests.</p><Link href="/contact" className="mt-5 inline-flex rounded-full bg-[#d79a44] px-5 py-3 text-sm font-extrabold text-[#1d130c]">Get started</Link></div>
           </aside>
         </div>
       </section>
-
-      {featuredTours.length ? (
-        <section className="bg-[#f9f2e7] px-5 py-20 sm:px-8 lg:px-10">
-          <div className="mx-auto max-w-7xl">
-            <p className="premium-eyebrow">Tours mentioned in this guide</p>
-            <h2 className="display-font mt-3 text-5xl font-semibold tracking-[-.04em] text-[#2b1b11]">Related journeys.</h2>
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
-              {featuredTours.map((tour) => <TourCard key={tour.id} tour={tour} />)}
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {relatedPosts.length ? (
-        <section className="bg-[#fffaf2] px-5 py-20 sm:px-8 lg:px-10">
-          <div className="mx-auto max-w-7xl">
-            <p className="premium-eyebrow">Continue reading</p>
-            <h2 className="display-font mt-3 text-5xl font-semibold tracking-[-.04em] text-[#2b1b11]">Related articles.</h2>
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
-              {relatedPosts.map((related) => <BlogCard key={related.id} post={related} />)}
-            </div>
-          </div>
-        </section>
-      ) : null}
 
       <CTA eyebrow="Need help choosing?" title="Tell us what you want to feel in Morocco." text="We will guide you toward the route, timing, and travel style that fits you best." />
     </>
