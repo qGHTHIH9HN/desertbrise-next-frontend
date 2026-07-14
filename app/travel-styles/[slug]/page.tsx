@@ -179,7 +179,7 @@ export default async function TravelStyleDetailPage({ params }: Props) {
                 <p className="premium-eyebrow">Related guides</p>
                 <div className="mt-5 space-y-4">
                   {posts.map((post: any) => (
-                    <BlogCard key={post.id || post.slug} post={post} compact />
+                    <BlogCard key={post.id || post.slug} post={post} />
                   ))}
                 </div>
               </div>
