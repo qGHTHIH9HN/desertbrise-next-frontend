@@ -155,7 +155,7 @@ export default async function DestinationDetailPage({ params }: Props) {
                 <h2 className="display-font mt-3 text-5xl font-semibold">Trips that can include {page.title}</h2>
                 <div className="mt-8 grid gap-6 md:grid-cols-3">
                   {services.map((service: any) => (
-                    <TourCard key={service.id || service.slug} service={service} />
+                    <TourCard key={service.id || service.slug} tour={service} />
                   ))}
                 </div>
               </section>
