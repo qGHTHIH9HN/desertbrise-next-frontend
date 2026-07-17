@@ -317,11 +317,11 @@ export default async function DynamicDetailPage({ params }: Props) {
               <div className="h-full w-full bg-[radial-gradient(circle_at_30%_20%,#f0bd72,#8d5524_48%,#2b1b11)]" />
             )}
             <div className="absolute bottom-6 left-6 right-6 rounded-[1.8rem] bg-white/85 p-5 backdrop-blur">
-              <p className="premium-eyebrow">Controlled from admin</p>
-              <p className="mt-2 text-sm leading-6 text-[#75675d]">
-                Hero image, title, subtitle, intro, tours, guides, FAQ, CTA and sections are loaded from your PHP CMS.
-              </p>
-            </div>
+  <p className="premium-eyebrow">Private Morocco Journey</p>
+  <p className="mt-2 text-sm leading-6 text-[#75675d]">
+    A carefully shaped experience with local knowledge, flexible planning, and authentic moments.
+  </p>
+</div>
           </div>
         </div>
       </section>
