@@ -289,10 +289,10 @@ export default async function TravelStyleDetailPage({ params }: Props) {
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.02fr_.98fr] lg:items-stretch">
           <div className="flex min-h-[560px] flex-col justify-end rounded-[2.5rem] bg-[#2b1b11] p-7 text-white shadow-[0_30px_100px_rgba(58,37,22,.22)] md:p-12">
             <Link href={"/travel-styles"} className="text-sm font-bold text-[#f4c36e]">
-              ← {All travel styles}
+              ← All travel styles
             </Link>
             <p className="mt-16 text-xs font-black uppercase tracking-[0.36em] text-[#f4c36e]">
-              {Morocco Travel Style}
+            Morocco Travel Style
             </p>
             <h1 className="display-font mt-5 text-6xl font-semibold leading-[0.95] tracking-[-0.05em] text-white md:text-8xl">
               {page.title}
