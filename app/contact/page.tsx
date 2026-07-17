@@ -1,10 +1,14 @@
 import Link from "next/link";
+import { PlanTripForm } from "@/components/PlanTripForm";
+import { getServices } from "@/lib/api";
 
 export const metadata = {
   title: "Plan a Private Morocco Trip | DesertBrise Travel",
   description:
     "Contact DesertBrise Travel to plan a private Morocco tour, desert journey, trekking route, or tailor-made cultural experience.",
 };
+
+export const revalidate = 300;
 
 const contactCards = [
   {
@@ -27,9 +31,23 @@ const contactCards = [
   },
 ];
 
-const fields = ["Travel dates", "Number of travelers", "Preferred comfort", "Main places you dream of"];
+const trustSteps = [
+  "You send your dates and travel feeling",
+  "We understand your rhythm and comfort level",
+  "We shape a private Morocco route",
+  "You receive a clear proposal",
+];
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  let services = [];
+
+  try {
+    const response = await getServices({ per_page: 80 });
+    services = response.items || [];
+  } catch {
+    services = [];
+  }
+
   return (
     <>
       <section className="relative isolate overflow-hidden bg-[#2b1b11] px-5 py-24 text-white sm:px-8 lg:px-10">
@@ -53,11 +71,14 @@ export default function ContactPage() {
           </div>
 
           <div className="rounded-[2rem] border border-white/14 bg-white/12 p-6 shadow-2xl backdrop-blur-md">
-            <p className="text-sm font-bold uppercase tracking-[.22em] text-[#efbd73]">Before contacting us</p>
+            <p className="text-sm font-bold uppercase tracking-[.22em] text-[#efbd73]">How planning works</p>
             <div className="mt-5 grid gap-3">
-              {fields.map((field) => (
-                <div key={field} className="rounded-full bg-white/10 px-4 py-3 text-sm font-bold text-white/86">
-                  {field}
+              {trustSteps.map((step, index) => (
+                <div key={step} className="flex items-center gap-3 rounded-full bg-white/10 px-4 py-3 text-sm font-bold text-white/86">
+                  <span className="grid h-7 w-7 place-items-center rounded-full bg-[#d79a44] text-xs text-[#1d130c]">
+                    {index + 1}
+                  </span>
+                  {step}
                 </div>
               ))}
             </div>
@@ -66,7 +87,7 @@ export default function ContactPage() {
       </section>
 
       <section className="bg-[#fffaf2] px-5 pb-24 pt-8 sm:px-8 lg:px-10">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[.86fr_1.14fr]">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[.82fr_1.18fr]">
           <div>
             <p className="premium-eyebrow">Direct contact</p>
             <h2 className="display-font mt-3 text-5xl font-semibold leading-[1] tracking-[-.04em] text-[#2b1b11] md:text-7xl">
@@ -90,42 +111,16 @@ export default function ContactPage() {
                 </Link>
               ))}
             </div>
-          </div>
 
-          <div className="overflow-hidden rounded-[2.4rem] border border-[#eadbc8] bg-white shadow-[0_28px_90px_rgba(58,37,22,.12)]">
-            <div className="relative h-72 bg-[#dac9b7]">
-              <img
-                src="https://www.desertbrise-travel.com/public/assets/uploads/services/service_1782507486_bd3cd0d5.webp"
-                alt="Morocco private travel consultation"
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6 text-white">
-                <p className="premium-eyebrow text-[#efbd73]">Human planning</p>
-                <h3 className="display-font mt-2 text-4xl font-semibold leading-none tracking-[-.04em]">
-                  We answer like real local planners, not machines.
-                </h3>
-              </div>
-            </div>
-
-            <div className="p-7 md:p-10">
-              <div className="rounded-[1.7rem] bg-[#f9f2e7] p-6">
-                <p className="text-sm font-extrabold uppercase tracking-[.2em] text-[#8b541f]">Message example</p>
-                <p className="mt-4 text-base leading-8 text-[#5d4b3e]">
-                  “Hello DesertBrise, we are 2 travelers coming in October for 7 days. We want desert, culture, comfort, and something authentic but not rushed. What do you recommend?”
-                </p>
-              </div>
-
-              <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                <Link href="https://wa.me/212600454881" className="premium-btn bg-[#d79a44] text-[#1d130c] hover:bg-[#efbd73]">
-                  Message on WhatsApp <span>→</span>
-                </Link>
-                <Link href="mailto:Desertbrise@gmail.com" className="premium-btn border border-[#eadbc8] bg-white text-[#2b1b11] hover:border-[#d79a44]">
-                  Send email
-                </Link>
-              </div>
+            <div className="mt-8 rounded-[1.8rem] border border-[#eadbc8] bg-white p-6 shadow-[0_18px_54px_rgba(58,37,22,.06)]">
+              <p className="premium-eyebrow">Conversion upgrade</p>
+              <p className="mt-3 text-sm leading-7 text-[#75675d]">
+                This form sends requests into your PHP booking system, so leads can appear in your existing admin instead of being lost in messages.
+              </p>
             </div>
           </div>
+
+          <PlanTripForm services={services} />
         </div>
       </section>
     </>
