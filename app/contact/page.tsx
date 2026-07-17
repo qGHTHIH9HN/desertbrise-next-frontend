@@ -39,7 +39,13 @@ const trustSteps = [
 ];
 
 export default async function ContactPage() {
-  let services = [];
+  let services: {
+  id: number;
+  title: string;
+  duration?: string;
+  location?: string;
+  price?: number;
+}[] = [];
 
   try {
     const response = await getServices({ per_page: 80 });
