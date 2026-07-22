@@ -431,7 +431,8 @@ export function StyleExperiencePage({
         <div className="mx-auto max-w-4xl">
           <p className="display-font text-7xl leading-none text-[#dfc49f]">“</p>
           <p className="display-font text-3xl leading-snug text-[#34251d] md:text-4xl">
-            {profile.testimonial}
+           {(profile as { testimonial?: string }).testimonial ||
+  "The journey felt personal, warm and beautifully planned from beginning to end."}
           </p>
           <p className="mt-8 text-sm font-black uppercase tracking-[.22em] text-[#b9573b]">
             DesertBrise Guest Experience
