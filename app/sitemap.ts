@@ -12,7 +12,7 @@ function cleanUrl(path: string) {
 function servicePath(item: any) {
   if (item.url) return cleanUrl(item.url);
 
-  const type = String(item.type || item.category || "").toLowerCase();
+  const type = String(item.type || item.category || item.url_base || "").toLowerCase();
   const slug = item.slug || "";
 
   if (type.includes("trek")) return cleanUrl(`/trek/${slug}`);
@@ -27,6 +27,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${SITE_URL}/tours`, lastModified: now, changeFrequency: "daily", priority: 0.95 },
+    { url: `${SITE_URL}/trip-match`, lastModified: now, changeFrequency: "weekly", priority: 0.93 },
+    { url: `${SITE_URL}/morocco-travel-planner`, lastModified: now, changeFrequency: "monthly", priority: 0.88 },
+    { url: `${SITE_URL}/why-travel-with-us`, lastModified: now, changeFrequency: "monthly", priority: 0.86 },
     { url: `${SITE_URL}/destinations`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE_URL}/travel-styles`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: "daily", priority: 0.85 },
@@ -81,11 +84,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.82,
     }));
 
-  return [
-    ...staticPages,
-    ...servicePages,
-    ...blogPages,
-    ...destinationPages,
-    ...stylePages,
-  ];
+  return [...staticPages, ...servicePages, ...blogPages, ...destinationPages, ...stylePages];
 }

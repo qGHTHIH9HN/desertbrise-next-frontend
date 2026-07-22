@@ -54,9 +54,7 @@ export function buildOrganizationSchema() {
       addressRegion: "Drâa-Tafilalet",
       addressLocality: "M'Hamid El Ghizlane",
     },
-    sameAs: [
-      "https://desertbrise-travel.com",
-    ],
+    sameAs: ["https://desertbrise-travel.com"],
   };
 }
 
@@ -91,7 +89,11 @@ export function buildBreadcrumbSchema(items: Array<{ name: string; url: string }
   };
 }
 
-export function buildTourSchema(service: any, slug: string, routeBase: "/tour" | "/trek" | "/daytrip" = "/tour") {
+export function buildTourSchema(
+  service: any,
+  slug: string,
+  routeBase: "/tour" | "/trek" | "/daytrip" = "/tour"
+) {
   const title = service?.title || "Private Morocco Journey";
   const description =
     cleanText(service?.meta_description) ||

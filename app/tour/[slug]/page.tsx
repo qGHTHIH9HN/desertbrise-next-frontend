@@ -1,11 +1,7 @@
 import { getService } from "@/lib/api";
 import { JourneyDetail } from "@/components/JourneyDetailPage";
 import { StructuredData } from "@/components/StructuredData";
-import {
-  buildBreadcrumbSchema,
-  buildFaqSchema,
-  buildTourSchema,
-} from "@/lib/structured-data";
+import { buildBreadcrumbSchema, buildFaqSchema, buildTourSchema } from "@/lib/structured-data";
 
 type Props = { params: Promise<{ slug: string }> };
 

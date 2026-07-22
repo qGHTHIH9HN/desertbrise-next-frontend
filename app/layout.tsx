@@ -3,7 +3,9 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FloatingConversion } from "@/components/FloatingConversion";
+import { SmartCapturePopup } from "@/components/SmartCapturePopup";
 import { StructuredData } from "@/components/StructuredData";
+import { VisitorTracker } from "@/components/VisitorTracker";
 import { buildOrganizationSchema, buildWebsiteSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
@@ -34,10 +36,12 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen antialiased">
         <StructuredData data={[buildOrganizationSchema(), buildWebsiteSchema()]} />
+        <VisitorTracker />
         <Header />
         <main>{children}</main>
         <Footer />
         <FloatingConversion />
+        <SmartCapturePopup />
       </body>
     </html>
   );

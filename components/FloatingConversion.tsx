@@ -42,15 +42,15 @@ export function FloatingConversion() {
         </a>
 
         <Link
-          href="/contact"
+          href="/trip-match"
           className="group flex items-center gap-3 rounded-full bg-[#2b1b11] px-5 py-3 text-sm font-black text-white shadow-[0_18px_50px_rgba(43,27,17,.22)] transition hover:-translate-y-1 hover:bg-[#7a4a1f]"
         >
           <span className="grid h-9 w-9 place-items-center rounded-full bg-[#d79a44] text-[#1d130c]">
             →
           </span>
           <span>
-            <span className="block leading-none">Plan my trip</span>
-            <span className="mt-1 block text-xs font-bold text-white/68">Get a custom route</span>
+            <span className="block leading-none">Find my trip</span>
+            <span className="mt-1 block text-xs font-bold text-white/68">60-second match</span>
           </span>
         </Link>
       </div>
@@ -65,10 +65,10 @@ export function FloatingConversion() {
           WhatsApp
         </a>
         <Link
-          href="/contact"
+          href="/trip-match"
           className="flex items-center justify-center gap-2 rounded-full bg-[#2b1b11] px-4 py-3 text-xs font-black text-white"
         >
-          Plan Trip →
+          Find Trip →
         </Link>
       </div>
     </>
