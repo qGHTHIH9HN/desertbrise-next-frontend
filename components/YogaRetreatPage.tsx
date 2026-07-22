@@ -246,7 +246,7 @@ export function YogaRetreatPage({
             <p className="mt-7 max-w-2xl text-lg leading-8 text-[#5e5148]">{intro}</p>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <Link href={page.cta_button_url || "/contact"} className="premium-btn bg-[#b9573b] text-white hover:bg-[#9f442d]">
-                {page.cta_button_label || profile.cta} <span>→</span>
+                {ctaLabel} <span>→</span>
               </Link>
               <a href="#offers" className="premium-btn border border-[#bfa996] bg-white/50 text-[#2f261f] hover:bg-white">
                 Explore the Retreat <span>›</span>
@@ -461,7 +461,7 @@ export function YogaRetreatPage({
             </p>
           </div>
           <Link href={page.cta_button_url || "/contact"} className="premium-btn bg-[#b9573b] text-white hover:bg-[#9f442d]">
-            {page.cta_button_label || profile.cta} <span>→</span>
+            {ctaLabel} <span>→</span>
           </Link>
         </div>
       </section>
