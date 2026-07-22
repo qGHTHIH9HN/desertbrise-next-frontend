@@ -38,11 +38,12 @@ function firstImage(page: AnyPage, services: AnyItem[] = []) {
   );
 }
 
-function secondImage(page: AnyPage, services: AnyItem[] = []) {
+function secondaryImage(page: AnyPage, services: AnyItem[] = []) {
   return (
+    page.intro_image ||
     page.secondary_image ||
     page.image_2 ||
-    services.find((service) => service.image && service.image !== firstImage(page, services))?.image ||
+    page.surprise_image ||
     page.image ||
     firstImage(page, services)
   );
@@ -222,9 +223,13 @@ export function YogaRetreatPage({
   posts?: AnyItem[];
 }) {
   const profile = getYogaProfile(page);
-  const profileAny = profile as any;
+const profileAny = profile as any;
 const accentLabel = profileAny.accent || "Retreat";
-  const ctaLabel = page.cta_button_label || profileAny.cta || "Plan Your Retreat";
+const ctaLabel =
+  page.cta_button_text ||
+  page.cta_button_label ||
+  profileAny.cta ||
+  "Plan Your Retreat";
   const hero = firstImage(page, services);
   const image2 = secondImage(page, services);
   const title = page.hero_title || page.title || profile.titleFallback;
