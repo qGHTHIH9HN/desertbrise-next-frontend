@@ -222,7 +222,9 @@ export function YogaRetreatPage({
   posts?: AnyItem[];
 }) {
   const profile = getYogaProfile(page);
-  const ctaLabel = page.cta_button_label || (profile as any).cta || "Plan Your Retreat";
+  const profileAny = profile as any;
+const accentLabel = profileAny.accent || "Retreat";
+  const ctaLabel = page.cta_button_label || profileAny.cta || "Plan Your Retreat";
   const hero = firstImage(page, services);
   const image2 = secondImage(page, services);
   const title = page.hero_title || page.title || profile.titleFallback;
@@ -339,7 +341,7 @@ export function YogaRetreatPage({
           <div className="text-center">
             <p className="premium-eyebrow">Curated Experiences</p>
             <h2 className="display-font mt-3 text-5xl font-semibold tracking-[-.045em] text-[#30251f] md:text-7xl">
-              {profile.accent} Offers
+              {accentLabel} Offers
             </h2>
             <p className="mx-auto mt-5 max-w-2xl leading-8 text-[#6b5c52]">
               This is the important dynamic list. Add selected yoga retreat services in admin, or fill the Experiences field to control these cards.
