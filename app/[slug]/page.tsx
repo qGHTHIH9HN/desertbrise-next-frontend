@@ -1,4 +1,5 @@
 import { getCmsPage, getServices } from "@/lib/api";
+import { YogaRetreatPage } from "@/components/YogaRetreatPage";
 import { StyleExperiencePage } from "@/components/StyleExperiencePage";
 import { notFound, redirect } from "next/navigation";
 
@@ -6,35 +7,30 @@ type Props = { params: Promise<{ slug: string }> };
 
 export const revalidate = 60;
 
+function pageKey(page: any, slug: string) {
+  return `${slug} ${page?.title || ""} ${page?.meta_title || ""}`.toLowerCase();
+}
+
+function isYogaPage(page: any, slug: string) {
+  const key = pageKey(page, slug);
+  return key.includes("yoga") || key.includes("retreat") || key.includes("wellness");
+}
+
 function keywordFromPage(page: any, slug: string) {
-  const text = `${slug} ${page?.title || ""}`.toLowerCase();
+  const key = pageKey(page, slug);
 
-  if (text.includes("yoga") || text.includes("retreat") || text.includes("wellness")) {
-    return "yoga retreat";
-  }
-
-  if (text.includes("trek") || text.includes("hiking") || text.includes("adventure")) {
-    return "trek";
-  }
-
-  if (text.includes("luxury") || text.includes("premium")) {
-    return "luxury";
-  }
-
-  if (text.includes("family")) {
-    return "family";
-  }
-
-  if (text.includes("desert") || text.includes("sahara")) {
-    return "desert";
-  }
+  if (key.includes("mountain") || key.includes("atlas")) return "mountain yoga retreat atlas";
+  if (key.includes("desert") || key.includes("sahara")) return "desert yoga retreat";
+  if (key.includes("yoga") || key.includes("retreat") || key.includes("wellness")) return "yoga retreat";
+  if (key.includes("trek") || key.includes("hiking") || key.includes("adventure")) return "trek";
+  if (key.includes("luxury") || key.includes("premium")) return "luxury";
+  if (key.includes("family")) return "family";
 
   return page?.title || slug;
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-
   const data = await getCmsPage(slug).catch(() => null);
 
   if (!data?.page) {
@@ -66,18 +62,16 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function RootCmsPage({ params }: Props) {
   const { slug } = await params;
-
   const data = await getCmsPage(slug).catch(() => null);
 
   if (!data?.page) {
     notFound();
   }
 
-  const page = data.page;
-  const pageAny = page as any;
-const pageType = String(pageAny.page_type || pageAny.type || "").toLowerCase();
+  const page = data.page as any;
+  const pageType = String(page.page_type || page.type || "").toLowerCase();
 
-  if (pageType.includes("hub") || pageType.includes("destination")) {
+  if ((pageType.includes("hub") || pageType.includes("destination")) && !isYogaPage(page, slug)) {
     redirect(`/destinations/${slug}`);
   }
 
@@ -97,6 +91,10 @@ const pageType = String(pageAny.page_type || pageAny.type || "").toLowerCase();
       : matchingServices?.items?.length
         ? matchingServices.items
         : fallbackServices?.items || [];
+
+  if (isYogaPage(page, slug)) {
+    return <YogaRetreatPage page={page} services={services} posts={selectedPosts} />;
+  }
 
   return <StyleExperiencePage page={page} services={services} posts={selectedPosts} />;
 }

@@ -1,18 +1,29 @@
 import { getCmsPage, getServices } from "@/lib/api";
+import { YogaRetreatPage } from "@/components/YogaRetreatPage";
 import { StyleExperiencePage } from "@/components/StyleExperiencePage";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export const revalidate = 60;
 
-function keywordFromPage(page: any, slug: string) {
-  const text = `${slug} ${page?.title || ""}`.toLowerCase();
+function pageKey(page: any, slug: string) {
+  return `${slug} ${page?.title || ""} ${page?.meta_title || ""}`.toLowerCase();
+}
 
-  if (text.includes("yoga") || text.includes("retreat") || text.includes("wellness")) return "yoga retreat";
-  if (text.includes("trek") || text.includes("hiking") || text.includes("adventure")) return "trek";
-  if (text.includes("luxury") || text.includes("premium")) return "luxury";
-  if (text.includes("family")) return "family";
-  if (text.includes("desert") || text.includes("sahara")) return "desert";
+function isYogaPage(page: any, slug: string) {
+  const key = pageKey(page, slug);
+  return key.includes("yoga") || key.includes("retreat") || key.includes("wellness");
+}
+
+function keywordFromPage(page: any, slug: string) {
+  const key = pageKey(page, slug);
+
+  if (key.includes("mountain") || key.includes("atlas")) return "mountain yoga retreat atlas";
+  if (key.includes("desert") || key.includes("sahara")) return "desert yoga retreat";
+  if (key.includes("yoga") || key.includes("retreat") || key.includes("wellness")) return "yoga retreat";
+  if (key.includes("trek") || key.includes("hiking") || key.includes("adventure")) return "trek";
+  if (key.includes("luxury") || key.includes("premium")) return "luxury";
+  if (key.includes("family")) return "family";
 
   return page?.title || slug;
 }
@@ -36,7 +47,7 @@ export async function generateMetadata({ params }: Props) {
         images: page.image ? [page.image] : [],
       },
       alternates: {
-        canonical: `https://desertbrise-travel.com/travel-styles/${slug}`,
+        canonical: `https://desertbrise-travel.com/${slug}`,
       },
     };
   } catch {
@@ -51,11 +62,12 @@ export default async function TravelStyleDetailPage({ params }: Props) {
   const { slug } = await params;
   const { page } = await getCmsPage(slug);
 
-  const selectedServices = Array.isArray(page.services) ? page.services : [];
-  const selectedPosts = Array.isArray(page.posts) ? page.posts : [];
+  const pageAny = page as any;
+  const selectedServices = Array.isArray(pageAny.services) ? pageAny.services : [];
+  const selectedPosts = Array.isArray(pageAny.posts) ? pageAny.posts : [];
 
   const matchingServices = await getServices({
-    q: keywordFromPage(page, slug),
+    q: keywordFromPage(pageAny, slug),
     per_page: 9,
   }).catch(() => null);
 
@@ -68,5 +80,9 @@ export default async function TravelStyleDetailPage({ params }: Props) {
         ? matchingServices.items
         : fallbackServices?.items || [];
 
-  return <StyleExperiencePage page={page} services={services} posts={selectedPosts} />;
+  if (isYogaPage(pageAny, slug)) {
+    return <YogaRetreatPage page={pageAny} services={services} posts={selectedPosts} />;
+  }
+
+  return <StyleExperiencePage page={pageAny} services={services} posts={selectedPosts} />;
 }
