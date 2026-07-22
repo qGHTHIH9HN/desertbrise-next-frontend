@@ -8,9 +8,9 @@ export type LandingConfig = {
   subtitle: string;
   primaryCta?: string;
   secondaryCta?: string;
-  pillars: Array<[string, string]>;
-  faq: Array<[string, string]>;
-  routes: Array<[string, string]>;
+  pillars: string[][];
+  faq: string[][];
+  routes: string[][];
 };
 
 export function SeoLandingPage({
