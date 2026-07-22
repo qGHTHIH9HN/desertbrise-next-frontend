@@ -222,6 +222,7 @@ export function YogaRetreatPage({
   posts?: AnyItem[];
 }) {
   const profile = getYogaProfile(page);
+  const ctaLabel = page.cta_button_label || (profile as any).cta || "Plan Your Retreat";
   const hero = firstImage(page, services);
   const image2 = secondImage(page, services);
   const title = page.hero_title || page.title || profile.titleFallback;
