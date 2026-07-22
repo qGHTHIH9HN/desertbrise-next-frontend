@@ -1,5 +1,7 @@
 import type { ReactElement } from "react";
 import Link from "next/link";
+import { StructuredData } from "@/components/StructuredData";
+import { buildOrganizationSchema, buildWebsiteSchema } from "@/lib/structured-data";
 import { BlogCard } from "@/components/BlogCard";
 import { CTA } from "@/components/CTA";
 import { TourCard } from "@/components/TourCard";
