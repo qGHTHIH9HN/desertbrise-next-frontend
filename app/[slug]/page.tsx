@@ -74,7 +74,8 @@ export default async function RootCmsPage({ params }: Props) {
   }
 
   const page = data.page;
-  const pageType = String(page.page_type || page.type || "").toLowerCase();
+  const pageAny = page as any;
+const pageType = String(pageAny.page_type || pageAny.type || "").toLowerCase();
 
   if (pageType.includes("hub") || pageType.includes("destination")) {
     redirect(`/destinations/${slug}`);
