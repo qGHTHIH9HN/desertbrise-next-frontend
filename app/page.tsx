@@ -166,6 +166,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <StructuredData data={[buildOrganizationSchema(), buildWebsiteSchema()]} />
       <section className="premium-hero relative isolate min-h-[96vh] overflow-hidden bg-[#1d130c] text-white">
         <img
           src={heroImage}
